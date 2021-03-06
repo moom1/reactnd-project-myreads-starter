@@ -24,9 +24,17 @@ export default class Search extends Component {
       () => {
         if (this.state.text.length > 0) {
           this.updateSearchBooks(this.state.text);
+        } else {
+          this.resetResult();
         }
       }
     );
+  };
+
+  resetResult = () => {
+    this.setState({
+      resultBooks: [],
+    });
   };
 
   updateSearchBooks = (query) => {
