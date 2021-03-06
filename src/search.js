@@ -2,30 +2,61 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import Book from "./book";
+import PropTypes from "prop-types";
 
 export default class Search extends Component {
+  static propTypes = {
+    library: PropTypes.array.isRequired,
+  };
+
   state = {
     text: "",
     resultBooks: [],
+    filteredLibrary: [],
   };
 
   handleChange = (event) => {
-    this.setState({
-      text: event.target.value,
-    });
-
-    this.updateSearchBooks(this.state.text);
+    this.setState(
+      {
+        text: event.target.value,
+      },
+      () => {
+        // console.log(this.state.text);
+        if (this.state.text.length > 0) {
+          this.updateSearchBooks(this.state.text);
+        }
+      }
+    );
   };
 
   updateSearchBooks = (query) => {
     BooksAPI.search(query).then((books) => {
-      this.setState({
-        resultBooks: books,
-      });
+      this.setState(
+        {
+          resultBooks: books,
+        },
+        () => {
+          console.log("NEW SEARCH");
 
-      console.log(this.state.resultBooks);
+          this.setState({
+            filteredLibrary: this.props.library.filter((book) => {
+              if (book.title.toLowerCase().includes(query.toLowerCase())) {
+                console.log(book);
+                return book;
+              } else {
+                return null;
+              }
+            }),
+          });
+        }
+      );
     });
   };
+
+  //update
+
+  //add
+
   render() {
     return (
       <div className="search-books">
@@ -55,19 +86,18 @@ export default class Search extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.resultBooks
-              ? this.state.resultBooks.map((book) => (
-                  <li key={book.id}>
-                    <Book
-                      book={book}
-                      shelfed={false}
-                      //   onChange={(event) =>
-                      //     this.moveHandler(event.target.value, book)
-                      //   }
-                    />
-                  </li>
-                ))
-              : null}
+            {// breaks when result is 0
+            this.state.resultBooks.map((book) => (
+              <li key={book.id}>
+                <Book
+                  book={book}
+                  shelfed={false}
+                  //   onChange={(event) =>
+                  //     this.moveHandler(event.target.value, book)
+                  //   }
+                />
+              </li>
+            ))}
           </ol>
         </div>
       </div>
