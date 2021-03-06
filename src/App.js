@@ -47,7 +47,6 @@ class BooksApp extends Component {
                 <h1>MyReads</h1>
               </div>
 
-              {/* content */}
               <div className="list-books-content">
                 <div>
                   <div className="bookshelf">
@@ -112,7 +111,6 @@ class BooksApp extends Component {
                 </div>
               </div>
 
-              {/* end of content */}
               <Link to="/search" className="open-search">
                 <button type="button">Add a book</button>
               </Link>

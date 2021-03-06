@@ -30,7 +30,7 @@ export default class Search extends Component {
   };
 
   updateSearchBooks = (query) => {
-    // filter Original Library !!BONUS FEATURE!!
+    // filter Original Library
     this.setState({
       filteredLibrary: this.props.library.filter((book) => {
         if (book.title.toLowerCase().includes(query.toLowerCase())) {
@@ -49,20 +49,9 @@ export default class Search extends Component {
           (book, index, self) =>
             index === self.findIndex((duplicate) => duplicate.id === book.id)
         );
-        this.setState(
-          {
-            resultBooks: tempLibrary,
-            // resultBooks: [...books],
-          },
-          () => {
-            // this.setState({
-            //   resultBooks: this.state.resultBooks.filter(
-            //     (book, index, self) =>
-            //       index === self.findIndex((t) => t.id === book.id)
-            //   ),
-            // });
-          }
-        );
+        this.setState({
+          resultBooks: tempLibrary,
+        });
       } else {
         this.setState({
           resultBooks: [],
@@ -101,8 +90,7 @@ export default class Search extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {// breaks when result is 0
-            this.state.resultBooks.map((book) => (
+            {this.state.resultBooks.map((book) => (
               <li key={book.id}>
                 <Book
                   book={book}

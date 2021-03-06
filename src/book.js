@@ -30,7 +30,6 @@ export default function Book(props) {
         </div>
       </div>
       <div className="book-title">{props.book.title}</div>
-      {/* fix later for all authors */}
       <div className="book-authors">
         {props.book.authors
           ? props.book.authors.map((author) => {
