@@ -13,6 +13,7 @@ export default class Search extends Component {
   state = {
     text: "",
     resultBooks: [],
+    filteredLibrary: [],
   };
 
   handleTextChange = (event) => {
@@ -29,23 +30,39 @@ export default class Search extends Component {
   };
 
   updateSearchBooks = (query) => {
-    //filter Original Library !!BONUS FEATURE!!
-    // this.setState({
-    //   filteredLibrary: this.props.library.filter((book) => {
-    //     if (book.title.toLowerCase().includes(query.toLowerCase())) {
-    //       return book;
-    //     } else {
-    //       return null;
-    //     }
-    //   }),
-    // });
+    // filter Original Library !!BONUS FEATURE!!
+    this.setState({
+      filteredLibrary: this.props.library.filter((book) => {
+        if (book.title.toLowerCase().includes(query.toLowerCase())) {
+          return book;
+        } else {
+          return null;
+        }
+      }),
+    });
 
     //get search from API
     BooksAPI.search(query).then((books) => {
       if (books.error !== "empty query") {
-        this.setState({
-          resultBooks: books,
-        });
+        let tempLibrary = [...this.state.filteredLibrary, ...books];
+        tempLibrary = tempLibrary.filter(
+          (book, index, self) =>
+            index === self.findIndex((duplicate) => duplicate.id === book.id)
+        );
+        this.setState(
+          {
+            resultBooks: tempLibrary,
+            // resultBooks: [...books],
+          },
+          () => {
+            // this.setState({
+            //   resultBooks: this.state.resultBooks.filter(
+            //     (book, index, self) =>
+            //       index === self.findIndex((t) => t.id === book.id)
+            //   ),
+            // });
+          }
+        );
       } else {
         this.setState({
           resultBooks: [],
