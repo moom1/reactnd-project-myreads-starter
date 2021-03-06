@@ -7,21 +7,20 @@ import PropTypes from "prop-types";
 export default class Search extends Component {
   static propTypes = {
     library: PropTypes.array.isRequired,
+    onChange: PropTypes.func.isRequired,
   };
 
   state = {
     text: "",
     resultBooks: [],
-    filteredLibrary: [],
   };
 
-  handleChange = (event) => {
+  handleTextChange = (event) => {
     this.setState(
       {
         text: event.target.value,
       },
       () => {
-        // console.log(this.state.text);
         if (this.state.text.length > 0) {
           this.updateSearchBooks(this.state.text);
         }
@@ -30,34 +29,33 @@ export default class Search extends Component {
   };
 
   updateSearchBooks = (query) => {
-    BooksAPI.search(query).then((books) => {
-      this.setState(
-        {
-          resultBooks: books,
-        },
-        () => {
-          console.log("NEW SEARCH");
+    //filter Original Library !!BONUS FEATURE!!
+    // this.setState({
+    //   filteredLibrary: this.props.library.filter((book) => {
+    //     if (book.title.toLowerCase().includes(query.toLowerCase())) {
+    //       return book;
+    //     } else {
+    //       return null;
+    //     }
+    //   }),
+    // });
 
-          this.setState({
-            filteredLibrary: this.props.library.filter((book) => {
-              if (book.title.toLowerCase().includes(query.toLowerCase())) {
-                console.log(book);
-                return book;
-              } else {
-                return null;
-              }
-            }),
-          });
-        }
-      );
+    //get search from API
+    BooksAPI.search(query).then((books) => {
+      if (books.error !== "empty query") {
+        this.setState({
+          resultBooks: books,
+        });
+      } else {
+        this.setState({
+          resultBooks: [],
+        });
+      }
     });
   };
 
-  //update
-
-  //add
-
   render() {
+    const moveHandler = this.props.onChange;
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -80,7 +78,7 @@ export default class Search extends Component {
               type="text"
               placeholder="Search by title or author"
               value={this.state.text}
-              onChange={this.handleChange}
+              onChange={this.handleTextChange}
             />
           </div>
         </div>
@@ -92,9 +90,7 @@ export default class Search extends Component {
                 <Book
                   book={book}
                   shelfed={false}
-                  //   onChange={(event) =>
-                  //     this.moveHandler(event.target.value, book)
-                  //   }
+                  onChange={(event) => moveHandler(event.target.value, book)}
                 />
               </li>
             ))}

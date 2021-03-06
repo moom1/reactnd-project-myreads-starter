@@ -7,25 +7,14 @@ import Search from "./search";
 
 class BooksApp extends Component {
   state = {
-    // currentlyReading: [],
-    // wantToRead: [],
-    // read: [],
     library: [],
-    showSearchPage: true,
   };
 
   initializeStates = () => {
     BooksAPI.getAll().then((books) => {
-      this.setState(() => ({ library: books }));
-      // this.setState(() => ({
-      //   currentlyReading: this.state.library.filter(
-      //     (book) => book.shelf === "currentlyReading"
-      //   ),
-      //   wantToRead: this.state.library.filter(
-      //     (book) => book.shelf === "wantToRead"
-      //   ),
-      //   read: this.state.library.filter((book) => book.shelf === "read"),
-      // }));
+      this.setState(() => ({
+        library: books.filter((book) => book.shelf !== "none"),
+      }));
     });
   };
 
@@ -45,7 +34,9 @@ class BooksApp extends Component {
         <Route
           exact
           path="/search"
-          render={() => <Search library={this.state.library} />}
+          render={() => (
+            <Search library={this.state.library} onChange={this.moveHandler} />
+          )}
         />
         <Route
           exact

@@ -2,7 +2,6 @@ import React from "react";
 export default function Book(props) {
   return (
     <div className="book">
-      {/* <div>{console.log(book)}</div> */}
       <div className="book-top">
         <div
           className="book-cover"
@@ -14,7 +13,10 @@ export default function Book(props) {
         />
 
         <div className="book-shelf-changer">
-          <select value={props.book.shelf} onChange={props.onChange}>
+          <select
+            value={props.book.shelf ? props.book.shelf : "none"}
+            onChange={props.onChange}
+          >
             <option value="move" disabled>
               Move to...
             </option>
@@ -28,13 +30,11 @@ export default function Book(props) {
       <div className="book-title">{props.book.title}</div>
       {/* fix later for all authors */}
       <div className="book-authors">
-        <ul>
-          {props.book.authors
-            ? props.book.authors.map((author) => {
-                return <li key={author}>{author}</li>;
-              })
-            : null}
-        </ul>
+        {props.book.authors
+          ? props.book.authors.map((author) => {
+              return <span key={author}>•{author} </span>;
+            })
+          : null}
       </div>
     </div>
   );
