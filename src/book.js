@@ -1,37 +1,33 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import ShelfChanger from "./shelfchanger";
-import * as BooksAPI from "./BooksAPI";
+import React from "react";
+export default function Book(props) {
+  return (
+    <div className="book">
+      {/* <div>{console.log(book)}</div> */}
+      <div className="book-top">
+        <div
+          className="book-cover"
+          style={{
+            width: 128,
+            height: 193,
+            backgroundImage: `url(${props.book.imageLinks.thumbnail})`,
+          }}
+        />
 
-class Book extends Component {
-  static propTypes = {
-    book: PropTypes.object.isRequired,
-    moveHandler: PropTypes.func.isRequired,
-  };
-
-  render() {
-    const { book, moveHandler } = this.props;
-
-    return (
-      <div className="book">
-        {/* <div>{console.log(book)}</div> */}
-        <div className="book-top">
-          <div
-            className="book-cover"
-            style={{
-              width: 128,
-              height: 193,
-              backgroundImage: `url(${book.imageLinks.thumbnail})`,
-            }}
-          />
-
-          <ShelfChanger book={book} onMove={moveHandler} />
+        <div className="book-shelf-changer">
+          <select value={props.book.shelf} onChange={props.onChange}>
+            <option value="move" disabled>
+              Move to...
+            </option>
+            <option value="currentlyReading">Currently Reading</option>
+            <option value="wantToRead">Want to Read</option>
+            <option value="read">Read</option>
+            <option value="none">None</option>
+          </select>
         </div>
-        <div className="book-title">{book.title}</div>
-        <div className="book-authors">{book.authors[0]}</div>
       </div>
-    );
-  }
+      <div className="book-title">{props.book.title}</div>
+      {/* fix later for all authors */}
+      <div className="book-authors">{props.book.authors[0]}</div>
+    </div>
+  );
 }
-
-export default Book;

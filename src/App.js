@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import Book from "./book";
 
-class BooksApp extends React.Component {
+class BooksApp extends Component {
   state = {
     currentlyReading: [],
     wantToRead: [],
@@ -12,7 +12,7 @@ class BooksApp extends React.Component {
     showSearchPage: false,
   };
 
-  componentDidMount() {
+  initializeStates = () => {
     BooksAPI.getAll().then((books) => {
       this.setState(() => ({ library: books }));
       this.setState(() => ({
@@ -25,11 +25,16 @@ class BooksApp extends React.Component {
         read: this.state.library.filter((book) => book.shelf === "read"),
       }));
     });
+  };
+
+  componentDidMount() {
+    this.initializeStates();
   }
 
-  moveHandler = (event, book) => {
-    BooksAPI.update(book, event.target.value);
-    console.log(event);
+  moveHandler = (newShelf, book) => {
+    BooksAPI.update(book, newShelf).then(() => {
+      this.initializeStates();
+    });
   };
 
   render() {
@@ -75,31 +80,48 @@ class BooksApp extends React.Component {
                     <ol className="books-grid">
                       {this.state.currentlyReading.map((book) => (
                         <li key={book.id}>
-                          <Book book={book} moveHandler={this.moveHandler} />
+                          <Book
+                            book={book}
+                            onChange={(event) =>
+                              this.moveHandler(event.target.value, book)
+                            }
+                          />
                         </li>
                       ))}
                     </ol>
                   </div>
                 </div>
+
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
                       {this.state.wantToRead.map((book) => (
                         <li key={book.id}>
-                          <Book book={book} moveHandler={this.moveHandler} />
+                          <Book
+                            book={book}
+                            onChange={(event) =>
+                              this.moveHandler(event.target.value, book)
+                            }
+                          />
                         </li>
                       ))}
                     </ol>
                   </div>
                 </div>
+
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
                       {this.state.read.map((book) => (
                         <li key={book.id}>
-                          <Book book={book} moveHandler={this.moveHandler} />
+                          <Book
+                            book={book}
+                            onChange={(event) =>
+                              this.moveHandler(event.target.value, book)
+                            }
+                          />
                         </li>
                       ))}
                     </ol>
