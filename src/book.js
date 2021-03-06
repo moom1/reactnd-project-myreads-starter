@@ -27,7 +27,15 @@ export default function Book(props) {
       </div>
       <div className="book-title">{props.book.title}</div>
       {/* fix later for all authors */}
-      <div className="book-authors">{props.book.authors[0]}</div>
+      <div className="book-authors">
+        <ul>
+          {props.book.authors
+            ? props.book.authors.map((author) => {
+                return <li key={author}>{author}</li>;
+              })
+            : null}
+        </ul>
+      </div>
     </div>
   );
 }
